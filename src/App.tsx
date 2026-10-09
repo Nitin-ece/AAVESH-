@@ -27,6 +27,7 @@ import {
   useState,
 } from "react"
 import BrandMark from "./components/BrandMark"
+import CinematicIntro from "./components/CinematicIntro"
 import Navbar from "./components/Navbar"
 import ScrollHUD from "./components/ScrollHUD"
 import TechCursor from "./components/TechCursor"
@@ -763,7 +764,7 @@ function Contact() {
   )
 }
 
-function Footer() {
+function Footer({ onReplayIntro }: { onReplayIntro?: () => void }) {
   return (
     <footer className="site-footer">
       <div className="container footer-main">
@@ -782,6 +783,15 @@ function Footer() {
             </Link>
           ))}
           <Link href="#contact">Contact</Link>
+          {onReplayIntro && (
+            <button
+              type="button"
+              onClick={onReplayIntro}
+              className="text-xs uppercase tracking-wider text-[#FF1238] hover:text-white transition-colors cursor-pointer bg-transparent border-0 p-0 text-left font-mono"
+            >
+              [Replay Intro]
+            </button>
+          )}
         </nav>
         <div className="footer-social" aria-label="Social link placeholders">
           <span>Verified social URLs required</span>
@@ -798,6 +808,14 @@ function Footer() {
 
 export default function App() {
   const [reverseFlow, setReverseFlow] = useState(false)
+  const [introKey, setIntroKey] = useState(0)
+  const [forceIntro, setForceIntro] = useState(false)
+
+  const handleReplayIntro = () => {
+    sessionStorage.removeItem("aavesh_intro_seen")
+    setForceIntro(true)
+    setIntroKey((prev) => prev + 1)
+  }
 
   const handleToggleReverseFlow = () => {
     setReverseFlow((prev) => !prev)
@@ -894,6 +912,11 @@ export default function App() {
 
   return (
     <div className={`app-wrapper ${reverseFlow ? "is-polarity-reversed" : ""}`}>
+      <CinematicIntro
+        key={introKey}
+        forcePlay={forceIntro}
+        onComplete={() => setForceIntro(false)}
+      />
       <Link className="skip-link" href="#main">
         Skip to content
       </Link>
@@ -912,7 +935,7 @@ export default function App() {
         <Sponsors />
         <Contact />
       </main>
-      <Footer />
+      <Footer onReplayIntro={handleReplayIntro} />
       <TechCursor />
       <ScrollHUD
         onToggleReverseFlow={handleToggleReverseFlow}

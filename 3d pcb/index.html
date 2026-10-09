@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AAVESH 3D PCB Studio // Hardware & WebGL Suite</title>
+    <meta name="description" content="Interactive 3D PCB model featuring the official AAVESH microprocessor, glowing travelling copper traces, and mouse-reactive indicator LEDs." />
+    <link rel="icon" type="image/png" href="/images/aavesh-logo-white.png" />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <!-- WebGL Canvas Container -->
+    <div id="canvas-container"></div>
+
+    <!-- UI Overlay Layer -->
+    <div class="ui-layer">
+      <!-- Top Navigation & Actions -->
+      <header class="top-bar glass-panel interactive">
+        <div class="brand-wrapper">
+          <div class="logo-badge">
+            <img src="/images/aavesh-logo-white.png" alt="AAVESH" />
+          </div>
+          <div class="title-group">
+            <h1>AAVESH // 3D PCB STUDIO</h1>
+            <p><span class="status-dot"></span> SOC-M7 REV 3.4 // READY</p>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button id="btn-burst" class="btn btn-secondary" title="Send high-frequency electrical impulse through all traces">
+            ⚡ Pulse Burst
+          </button>
+          <button id="btn-code" class="btn btn-secondary" title="View hero integration code">
+            📋 Hero Code
+          </button>
+          <button id="btn-sound" class="btn btn-secondary" title="Toggle audio feedback">
+            🔊 Sound: ON
+          </button>
+          <button id="btn-download" class="btn btn-primary" title="Export complete 3D binary model (.GLB)">
+            ⬇️ Download .GLB
+          </button>
+        </div>
+      </header>
+
+      <!-- Camera Toolbar (Floating Left) -->
+      <aside class="camera-toolbar glass-panel interactive">
+        <button class="cam-btn active" data-view="hero" title="Cinematic Hero Perspective matching reference photo">
+          🎯 Hero View
+        </button>
+        <button class="cam-btn" data-view="top" title="Top-Down Engineering CAD Layout">
+          📐 Top-Down
+        </button>
+        <button class="cam-btn" data-view="chip" title="Extreme Macro on AAVESH Processor">
+          🔬 AIC Chip
+        </button>
+        <button class="cam-btn" data-view="iso" title="Clean 45-degree Isometric View">
+          🌐 Isometric
+        </button>
+      </aside>
+
+      <!-- Mouse Hover Telemetry Tooltip -->
+      <div id="telemetry-card" class="telemetry-card glass-panel">
+        <div class="card-title">
+          <span id="tel-name">U1 [AIC: AAVESH SOC-M7]</span>
+          <span class="status-dot"></span>
+        </div>
+        <p id="tel-desc" class="card-desc">Dual ARM Cortex-M7 @ 240MHz + RISC-V Neural Core</p>
+        <div class="telemetry-grid">
+          <div class="stat-item">
+            <span class="stat-label">Voltage</span>
+            <span id="tel-volt" class="stat-val">3.3V DC</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Bus Clock</span>
+            <span id="tel-freq" class="stat-val">240.00 MHz</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Drawer Controls -->
+      <footer class="bottom-bar glass-panel interactive">
+        <div class="hint-pill">
+          <span>💡 <span class="hint-key">Mouse Hover</span> Touch LEDs & ICs &bull; <span class="hint-key">Drag</span> Orbit &bull; <span class="hint-key">Scroll</span> Zoom</span>
+        </div>
+
+        <div class="controls-group">
+          <!-- Pulse Speed -->
+          <div class="slider-group">
+            <span>Pulse Speed:</span>
+            <input type="range" id="slider-speed" min="0.2" max="3.0" step="0.1" value="1.0" />
+          </div>
+
+          <!-- Glow Intensity (0.0 default as requested) -->
+          <div class="slider-group">
+            <span>Glow:</span>
+            <input type="range" id="slider-bloom" min="0.0" max="2.0" step="0.1" value="0.0" />
+          </div>
+
+          <!-- Color Themes -->
+          <div class="theme-selector">
+            <span class="theme-dot active" data-theme="cyan" style="background: #00f0ff;" title="AAVESH Cyan (Default)"></span>
+            <span class="theme-dot" data-theme="gold" style="background: #facc15;" title="Obsidian Gold"></span>
+            <span class="theme-dot" data-theme="emerald" style="background: #10b981;" title="Cyber Emerald"></span>
+            <span class="theme-dot" data-theme="crimson" style="background: #f43f5e;" title="Crimson Core"></span>
+          </div>
+
+          <!-- Auto-rotate -->
+          <button id="btn-autorotate" class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.72rem;">
+            🔄 Rotate: ON
+          </button>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Code Integration Modal -->
+    <div id="code-modal" class="modal-overlay">
+      <div class="modal-content glass-panel">
+        <div class="modal-header">
+          <h2>Hero Section Integration Code</h2>
+          <button id="modal-close-btn" class="modal-close">&times;</button>
+        </div>
+        <p style="font-size: 0.82rem; color: #94a3b8; margin-bottom: 0.8rem;">
+          Your 3D model is saved as <code>aavesh-pcb.glb</code>. Use either of the snippets below to drop it directly into your website hero section:
+        </p>
+
+        <h3 style="font-size: 0.88rem; color: #38bdf8; margin-bottom: 0.4rem;">Option A: React Three Fiber (Your Vite App)</h3>
+        <pre class="code-box"><code>import { Canvas } from '@react-three/fiber'
+import { useGLTF, OrbitControls } from '@react-three/drei'
+
+function PCBHeroModel() {
+  const { scene } = useGLTF('/aavesh-pcb.glb')
+  return &lt;primitive object={scene} scale={1.2} rotation={[0.4, -0.6, 0]} /&gt;
+}
+
+export function Hero3D() {
+  return (
+    &lt;Canvas camera={{ position: [6.2, 5.2, 7.8], fov: 40 }}&gt;
+      &lt;ambientLight intensity={1.2} /&gt;
+      &lt;directionalLight position={[8, 12, 6]} intensity={2.2} /&gt;
+      &lt;directionalLight position={[-9, 6, -6]} color="#00d4ff" intensity={2.8} /&gt;
+      &lt;PCBHeroModel /&gt;
+      &lt;OrbitControls enableDamping autoRotate /&gt;
+    &lt;/Canvas&gt;
+  )
+}</code></pre>
+
+        <h3 style="font-size: 0.88rem; color: #38bdf8; margin-bottom: 0.4rem;">Option B: Vanilla Three.js / HTML</h3>
+        <pre class="code-box"><code>import * as THREE from 'three'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+
+const loader = new GLTFLoader()
+loader.load('/aavesh-pcb.glb', (gltf) => {
+  scene.add(gltf.scene)
+})</code></pre>
+        <button id="btn-copy-code" class="btn btn-primary" style="width: 100%; justify-content: center;">
+          📋 Copy React Three Fiber Snippet
+        </button>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
