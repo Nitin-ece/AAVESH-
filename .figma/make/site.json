@@ -1,0 +1,12 @@
+{
+  "title": "AAVESH — Electronics & Technology Society, IIIT Una",
+  "description": "AAVESH is the official Electronics and Technology Society of IIIT Una, exploring electronics, embedded systems, robotics, IoT, and AI/ML.",
+  "language": "en",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
