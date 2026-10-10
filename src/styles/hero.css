@@ -273,13 +273,13 @@
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: -2;
+  z-index: 1;
   pointer-events: auto;
 }
 
 @media (min-width: 960px) {
   .hero-3d-container {
-    left: 22%;
+    left: 20%;
   }
 }
 
@@ -339,12 +339,24 @@
   padding-block: 4.5rem 3rem;
   position: relative;
   z-index: 5;
+  pointer-events: none;
 }
 
 .hero-content-wrapper {
   max-width: 44rem;
   display: flex;
   flex-direction: column;
+  pointer-events: none;
+}
+
+.hero-content-wrapper > * {
+  pointer-events: auto;
+}
+
+@media (min-width: 768px) {
+  .desktop-pcb-hint {
+    display: block !important;
+  }
 }
 
 /* Technical Eyebrow */

@@ -1,14 +1,14 @@
-import * as THREE from 'three';
+import * as THREE from "three"
 
 function ccw(A, B, C) {
-  return (C.z - A.z) * (B.x - A.x) > (B.z - A.z) * (C.x - A.x);
+  return (C.z - A.z) * (B.x - A.x) > (B.z - A.z) * (C.x - A.x)
 }
 function intersect(A, B, C, D) {
-  return (ccw(A, C, D) !== ccw(B, C, D)) && (ccw(A, B, C) !== ccw(A, B, D));
+  return ccw(A, C, D) !== ccw(B, C, D) && ccw(A, B, C) !== ccw(A, B, D)
 }
 
 export function generatePlanarRoutes() {
-  const routes = [];
+  const routes = []
 
   // ==========================================
   // 1. EAST BUS (Chip East pins: X=2.1, 10 pins)
@@ -16,8 +16,8 @@ export function generatePlanarRoutes() {
   // Pins 7..9 -> LEDs D3 (4.8), D2 (4.3), D1 (3.8) at Z=3.1
   // ==========================================
   for (let i = 0; i < 7; i++) {
-    const zPin = -1.35 + i * 0.32; // -1.35 to 0.57
-    const zEnd = -1.45 + i * 0.38; // -1.45 to 0.83 (strictly monotonic!)
+    const zPin = -1.35 + i * 0.32 // -1.35 to 0.57
+    const zEnd = -1.45 + i * 0.38 // -1.45 to 0.83 (strictly monotonic!)
     routes.push({
       points: [
         new THREE.Vector3(2.1, 0.012, zPin),
@@ -28,7 +28,7 @@ export function generatePlanarRoutes() {
       ],
       isGold: i % 2 === 0,
       speed: 0.65 + (i % 3) * 0.1,
-    });
+    })
   }
 
   // Pins 7, 8, 9 nested L-corners:
@@ -43,8 +43,8 @@ export function generatePlanarRoutes() {
       new THREE.Vector3(4.8, 0.012, 3.1), // LED D3
     ],
     isGold: true,
-    speed: 0.70,
-  });
+    speed: 0.7,
+  })
 
   routes.push({
     points: [
@@ -55,7 +55,7 @@ export function generatePlanarRoutes() {
     ],
     isGold: true,
     speed: 0.75,
-  });
+  })
 
   routes.push({
     points: [
@@ -65,8 +65,8 @@ export function generatePlanarRoutes() {
       new THREE.Vector3(3.8, 0.012, 3.1), // LED D1
     ],
     isGold: true,
-    speed: 0.80,
-  });
+    speed: 0.8,
+  })
 
   // ==========================================
   // 2. WEST BUS (Chip West pins: X=-2.1, 10 pins)
@@ -74,7 +74,7 @@ export function generatePlanarRoutes() {
   // Pins 4..9 -> Decoupling capacitors & power bus (X=-4.5)
   // ==========================================
   for (let i = 0; i < 4; i++) {
-    const zPin = -1.35 + i * 0.30; // -1.35, -1.05, -0.75, -0.45
+    const zPin = -1.35 + i * 0.3 // -1.35, -1.05, -0.75, -0.45
     routes.push({
       points: [
         new THREE.Vector3(-2.1, 0.012, zPin),
@@ -84,12 +84,12 @@ export function generatePlanarRoutes() {
       ],
       isGold: i % 2 === 0,
       speed: 0.72,
-    });
+    })
   }
 
   for (let i = 4; i < 10; i++) {
-    const zPin = -1.35 + i * 0.30; // -0.15 to 1.35
-    const zOut = 0.20 + (i - 4) * 0.35; // 0.20 to 1.95 (strictly monotonic!)
+    const zPin = -1.35 + i * 0.3 // -0.15 to 1.35
+    const zOut = 0.2 + (i - 4) * 0.35 // 0.20 to 1.95 (strictly monotonic!)
     routes.push({
       points: [
         new THREE.Vector3(-2.1, 0.012, zPin),
@@ -99,7 +99,7 @@ export function generatePlanarRoutes() {
       ],
       isGold: i % 3 === 0,
       speed: 0.62 + (i % 3) * 0.1,
-    });
+    })
   }
 
   // ==========================================
@@ -108,8 +108,8 @@ export function generatePlanarRoutes() {
   // Pins 4..7 (X > 0) -> Crystal Y1 (X=3.5, Z=-2.4)
   // ==========================================
   for (let i = 0; i < 4; i++) {
-    const xPin = -1.35 + i * 0.35; // -1.35 to -0.30
-    const xUsb = -2.40 + i * 0.35; // -2.40 to -1.35 (strictly monotonic!)
+    const xPin = -1.35 + i * 0.35 // -1.35 to -0.30
+    const xUsb = -2.4 + i * 0.35 // -2.40 to -1.35 (strictly monotonic!)
     routes.push({
       points: [
         new THREE.Vector3(xPin, 0.012, -2.1),
@@ -118,8 +118,8 @@ export function generatePlanarRoutes() {
         new THREE.Vector3(xUsb, 0.012, -3.9), // USB-C receptacle pad
       ],
       isGold: i % 2 === 0,
-      speed: 0.70,
-    });
+      speed: 0.7,
+    })
   }
 
   // Pins 4..7 (X > 0): Crystal lines
@@ -128,8 +128,8 @@ export function generatePlanarRoutes() {
   // Pin 5 (X=0.40) turns East at Z=-2.90
   // Pin 4 (X=0.05) turns East at Z=-3.15
   for (let i = 4; i < 8; i++) {
-    const xPin = -1.35 + i * 0.35; // 0.05, 0.40, 0.75, 1.10
-    const zTurn = -3.15 + (i - 4) * 0.25; // -3.15, -2.90, -2.65, -2.40
+    const xPin = -1.35 + i * 0.35 // 0.05, 0.40, 0.75, 1.10
+    const zTurn = -3.15 + (i - 4) * 0.25 // -3.15, -2.90, -2.65, -2.40
     routes.push({
       points: [
         new THREE.Vector3(xPin, 0.012, -2.1),
@@ -138,7 +138,7 @@ export function generatePlanarRoutes() {
       ],
       isGold: true,
       speed: 0.78,
-    });
+    })
   }
 
   // ==========================================
@@ -155,11 +155,11 @@ export function generatePlanarRoutes() {
     ],
     isGold: true,
     speed: 0.75,
-  });
+  })
 
   for (let i = 1; i < 8; i++) {
-    const xPin = -1.35 + i * 0.35; // -1.00 to +1.10
-    const xEnd = -1.15 + (i - 1) * 0.40; // -1.15 to +1.25 (strictly monotonic!)
+    const xPin = -1.35 + i * 0.35 // -1.00 to +1.10
+    const xEnd = -1.15 + (i - 1) * 0.4 // -1.15 to +1.25 (strictly monotonic!)
     routes.push({
       points: [
         new THREE.Vector3(xPin, 0.012, 2.1),
@@ -169,28 +169,30 @@ export function generatePlanarRoutes() {
       ],
       isGold: i % 2 === 0,
       speed: 0.65,
-    });
+    })
   }
 
-  return routes;
+  return routes
 }
 
-const routes = generatePlanarRoutes();
-console.log('Total routes:', routes.length);
+const routes = generatePlanarRoutes()
+console.log("Total routes:", routes.length)
 
-let conflicts = 0;
+let conflicts = 0
 for (let r1 = 0; r1 < routes.length; r1++) {
   for (let r2 = r1 + 1; r2 < routes.length; r2++) {
-    const p1 = routes[r1].points;
-    const p2 = routes[r2].points;
+    const p1 = routes[r1].points
+    const p2 = routes[r2].points
     for (let i = 0; i < p1.length - 1; i++) {
       for (let j = 0; j < p2.length - 1; j++) {
-        if (intersect(p1[i], p1[i+1], p2[j], p2[j+1])) {
-          console.log(`Conflict between Route ${r1} seg ${i} and Route ${r2} seg ${j}`);
-          conflicts++;
+        if (intersect(p1[i], p1[i + 1], p2[j], p2[j + 1])) {
+          console.log(
+            `Conflict between Route ${r1} seg ${i} and Route ${r2} seg ${j}`,
+          )
+          conflicts++
         }
       }
     }
   }
 }
-console.log('Total conflicts found:', conflicts);
+console.log("Total conflicts found:", conflicts)

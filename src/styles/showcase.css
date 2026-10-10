@@ -1,0 +1,408 @@
+/* ==========================================================================
+   ENERGY SCROLL SHOWCASE STYLES
+   Smooth 3D Revolving Showcase with SloshGauge Reactor & Energy Frames
+   ========================================================================== */
+
+.showcase-track {
+  position: relative;
+  width: 100%;
+  height: 380vh;
+  background: #020407;
+}
+
+.showcase-sticky {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1400px;
+}
+
+/* Background Canvas */
+.showcase-canvas-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.showcase-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  filter: contrast(1.1) brightness(0.95);
+}
+
+.showcase-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(2, 4, 7, 0.45) 0%, rgba(2, 4, 7, 0.82) 70%, #020407 100%),
+    linear-gradient(to bottom, rgba(2, 4, 7, 0.7) 0%, transparent 20%, transparent 80%, rgba(2, 4, 7, 0.9) 100%);
+  pointer-events: none;
+}
+
+/* Cyber Grid Lines */
+.showcase-grid-lines {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Main Interactive Stage Container */
+.showcase-stage-layout {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 1440px;
+  height: 100%;
+  padding: clamp(1rem, 3vw, 2.5rem);
+  display: grid;
+  grid-template-columns: minmax(320px, 1fr) auto minmax(320px, 1fr);
+  grid-template-rows: 1fr;
+  align-items: center;
+  gap: clamp(1.5rem, 3vw, 3rem);
+  transform-style: preserve-3d;
+}
+
+@media (max-width: 1024px) {
+  .showcase-stage-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    justify-items: center;
+    overflow-y: auto;
+    padding-top: 5.5rem;
+    padding-bottom: 5rem;
+    gap: 1.5rem;
+  }
+}
+
+/* Center Reactor / SloshGauge Housing */
+.showcase-reactor-col {
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 20;
+}
+
+@media (max-width: 1024px) {
+  .showcase-reactor-col {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+  }
+}
+
+.showcase-reactor-housing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem 1.25rem;
+  background: rgba(8, 14, 24, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 28px;
+  box-shadow: 
+    0 20px 50px rgba(0, 0, 0, 0.6),
+    0 0 40px rgba(255, 18, 56, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.showcase-reactor-housing:hover {
+  border-color: rgba(255, 18, 56, 0.4);
+  box-shadow: 
+    0 24px 60px rgba(0, 0, 0, 0.7),
+    0 0 60px rgba(255, 18, 56, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.showcase-reactor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 0.85rem;
+  padding: 0 0.25rem;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.showcase-reactor-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #ff1238;
+  font-weight: 600;
+}
+
+.showcase-reactor-tag::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ff1238;
+  box-shadow: 0 0 8px #ff1238;
+  animation: pulse-dot 1.5s infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+.showcase-reactor-footer {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+.showcase-reactor-stage-badge {
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+/* Nav Pager below Reactor */
+.showcase-pager {
+  margin-top: 1.25rem;
+  display: flex;
+  gap: 0.4rem;
+}
+
+.showcase-pager-btn {
+  padding: 0.35rem 0.75rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-muted);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.showcase-pager-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.showcase-pager-btn.is-active {
+  background: rgba(255, 18, 56, 0.15);
+  border-color: #ff1238;
+  color: #ff1238;
+  font-weight: 600;
+  box-shadow: 0 0 12px rgba(255, 18, 56, 0.3);
+}
+
+/* 3D Revolving Content Stages */
+.showcase-stage-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  backface-visibility: hidden;
+  transform-origin: center center;
+  pointer-events: none;
+  width: 100%;
+}
+
+.showcase-stage-card.is-active {
+  pointer-events: auto;
+}
+
+/* Left Orbit Stage (About) */
+.showcase-stage-card--about {
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+}
+
+/* Right Orbit Stage (Domains) */
+.showcase-stage-card--domains {
+  grid-column: 3 / 4;
+  grid-row: 1 / 2;
+}
+
+/* Sponsors Stages (Stage 3) */
+.showcase-stage-card--sponsors-left {
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+}
+
+.showcase-stage-card--sponsors-right {
+  grid-column: 3 / 4;
+  grid-row: 1 / 2;
+}
+
+@media (max-width: 1024px) {
+  .showcase-stage-card {
+    position: relative;
+    width: 100%;
+    margin-top: 1rem;
+    grid-column: 1 / 2 !important;
+    grid-row: 2 / 3 !important;
+  }
+}
+
+/* Card Surface Styling */
+.showcase-glass-panel {
+  background: rgba(9, 14, 22, 0.78);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: clamp(1.25rem, 3vw, 2.25rem);
+  box-shadow: 
+    0 24px 60px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.showcase-glass-panel::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 18, 56, 0.6), transparent);
+}
+
+.showcase-glass-panel--gold::after {
+  background: linear-gradient(90deg, transparent, rgba(255, 184, 0, 0.8), transparent);
+}
+
+.showcase-glass-panel--cyan::after {
+  background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.8), transparent);
+}
+
+/* Domain Mini-Grid inside Showcase */
+.showcase-domains-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.85rem;
+  margin-top: 1.25rem;
+}
+
+@media (max-width: 640px) {
+  .showcase-domains-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.showcase-domain-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  padding: 0.85rem 1rem;
+  transition: all 0.25s ease;
+}
+
+.showcase-domain-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(0, 229, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.showcase-domain-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+}
+
+.showcase-domain-header svg {
+  color: #00e5ff;
+}
+
+.showcase-domain-code {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+.showcase-domain-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 0.25rem 0;
+}
+
+.showcase-domain-desc {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Sponsor Tiers in Showcase */
+.showcase-sponsor-tiers {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin: 1.25rem 0;
+}
+
+.showcase-tier-pill {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 10px;
+  background: rgba(255, 184, 0, 0.08);
+  border: 1px solid rgba(255, 184, 0, 0.25);
+  color: #ffb800;
+  letter-spacing: 0.03em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.showcase-tier-pill::before {
+  content: "";
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #ffb800;
+  box-shadow: 0 0 6px #ffb800;
+}
+
+/* Anchor positioning points for direct URL hash jump */
+.showcase-anchor {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  visibility: hidden;
+  pointer-events: none;
+}
